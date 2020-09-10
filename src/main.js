@@ -1,50 +1,21 @@
 import Vue from 'vue'
 import App from './App.vue'
+import * as Filters from './utils/filters';
+import router from './router';
+import axios from 'axios';
 
-Vue.config.productionTip = false
+Vue.config.productionTip = false;
+axios.defaults.baseURL = 'https://boutique-67c30.firebaseio.com/';
+Vue.prototype.$http = axios;
+
+Object.keys(Filters).forEach( (f) => {
+  Vue.filter(f, Filters[f]);
+})
 
 export const eventBus = new Vue({
   data: {
-    products: [{
-      id: '1',
-      img: '',
-      title: 'MacBook',
-      description: 'Conçu pour ceux qui repoussent les limites du possible, le nouveau MacBook Pro est de loin l’ordinateur portable le plus puissant que nous ayons jamais créé.',
-      price: 1500
-    },
-    {
-      id: '2',
-      img: '',
-      title: 'Predator',
-      description: 'Conçu pour ceux qui repoussent les limites du possible, le nouveau MacBook Pro est de loin l’ordinateur portable le plus puissant que nous ayons jamais créé.',
-      price: 2300
-    },
-    {
-      id: '3',
-      img: '',
-      title: 'Asus ROG G703',
-      description: 'Conçu pour ceux qui repoussent les limites du possible, le nouveau MacBook Pro est de loin l’ordinateur portable le plus puissant que nous ayons jamais créé.',
-      price: 1800
-    },
-    {
-      id: '4',
-      img: '',
-      title: 'MacBook',
-      description: 'Graphics are handled by an overclockable',
-      price: 1500
-    },
-    {
-      id: '5',
-      img: '',
-      title: 'MacBook',
-      description: 'Conçu pour ceux qui repoussent les limites du possible, le nouveau MacBook Pro est de loin l’ordinateur portable le plus puissant que nous ayons jamais créé.',
-      price: 1500
-    },
-    ],
-    cart: [
-      
-    ]
-
+    products: [],
+    cart: [],
   },
   methods: {
     addProductToCart(product) {
@@ -56,10 +27,33 @@ export const eventBus = new Vue({
     removeItemFromCart(item){
       this.cart = this.cart.slice().filter( i => i.id !== item.id );
       this.$emit('update:cart', this.cart.slice());
+    },
+    addProduct(product){
+      this.$http.post('products.json', product)
+                .then( res => {
+                  this.products = [ ...this.products, {...product, id: this.products.length + 1 + ''}],
+                  this.$emit('update:products', this.products);
+                  return res;
+                });
+    },
+    addProducts(products){
+      this.products = products;
+      this.$emit('update:products', this.products);
+    },
+    initProducts(){
+      this.$http.get('products.json')
+                .then(res => {
+                  const data = res.data;
+                  this.addProducts(Object.keys(data).map( key => data[key]));
+                });
     }
+  },
+  created(){
+    this.initProducts();
   }
 })
 
 new Vue({
+  router,
   render: h => h(App),
 }).$mount('#app')
