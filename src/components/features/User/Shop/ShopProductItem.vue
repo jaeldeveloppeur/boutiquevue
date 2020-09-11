@@ -1,5 +1,5 @@
 <template>
-  <div class="w-25 p-3 product-container d-flex flex-column">
+  <div class="w-25 p-3 product-container d-flex flex-column item">
     <div class="d-flex flex-row justify-content-center">
       <img style="height:150px" :src="product.img">
     </div>
@@ -37,5 +37,9 @@ export default {
 
 p{
   font-size: 12px;
+}
+
+.item{
+  min-width: 250px;
 }
 </style>

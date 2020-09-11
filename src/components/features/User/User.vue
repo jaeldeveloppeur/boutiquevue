@@ -4,7 +4,7 @@
             <shop class="w-75"></shop>
         </transition>
         <transition name="right" appear>
-            <cart class="w-25"></cart>
+            <cart class="cart"></cart>
         </transition>
     </div>
     
@@ -44,4 +44,16 @@ export default {
     .right-enter-active{
         animation: fromright 1s;
     }
+.cart{
+    width: 25%;
+    min-width: 200px;
+}
+/* @media all and (max-width:500px){
+    shop{
+        width: 50% !important;
+    }
+    cart{
+        width: 50% !important;
+    }
+} */
 </style>

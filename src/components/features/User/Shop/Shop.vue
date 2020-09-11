@@ -1,4 +1,4 @@
-<template>
+<template class="shop">
   <shop-product-list :products="products" class="p-3"></shop-product-list>
 </template>
 
@@ -25,4 +25,5 @@ export default {
 </script>
 
 <style>
+
 </style>
